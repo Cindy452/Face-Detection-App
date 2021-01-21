@@ -55,7 +55,7 @@ const App = () => {
 
    const onButtonSubmit = () => {
     dispatch({ type: 'imageUrl', value: imgLinkInput });
-      fetch('http://localhost:3000/imageurl', {
+      fetch('https://fierce-temple-87254.herokuapp.com/imageurl', {
         method: 'post',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -65,7 +65,7 @@ const App = () => {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('http://localhost:3000/image', {
+          fetch('https://fierce-temple-87254.herokuapp.com/image', {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
