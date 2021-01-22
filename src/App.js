@@ -42,8 +42,6 @@ const App = () => {
     });
   };
 
-  
-
   const onInputChange = (event) => {
     const { name, value } = event.target;
     dispatch({ type: name, value });
@@ -53,27 +51,27 @@ const App = () => {
     dispatch({ type: 'box', value: boxValues });
   };
 
-   const onButtonSubmit = () => {
+  const onPictureSubmit = () => {
     dispatch({ type: 'imageUrl', value: imgLinkInput });
-      fetch('https://fierce-temple-87254.herokuapp.com/imageurl', {
-        method: 'post',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          input: imgLinkInput,
-        }),
-      })
-      .then(response => response.json())
-      .then(response => {
+    fetch('https://arcane-refuge-49695.herokuapp.com/imageurl', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: imgLinkInput,
+      }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
         if (response) {
-          fetch('https://fierce-temple-87254.herokuapp.com/image', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
+          fetch('https://arcane-refuge-49695.herokuapp.com/image', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              id: user.id
+              id: user.id,
             }),
           })
-            .then(response => response.json())
-            .then(count => {
+            .then((response) => response.json())
+            .then((count) => {
               setUser((prevUser) => {
                 return {
                   ...prevUser,
@@ -85,8 +83,8 @@ const App = () => {
         }
         displayFacebox(calculateFaceLocation(response), dispatch);
       })
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+  };
 
   const onRouteChange = (route) => {
     if (route === 'signout') {
@@ -95,32 +93,30 @@ const App = () => {
     } else if (route === 'home') {
       dispatch({ type: 'isSignedIn', value: true });
     }
-       dispatch({type: 'route', value: route});
+    dispatch({ type: 'route', value: route });
   };
 
-    return (
-      <div className="App">
-         <Particles className='particles'
-          params={particlesOptions}
-        />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={onRouteChange} />
-        { route === 'home'
-          ? (<div>
-              <Logo />
-              <Rank
-                name={user.name}
-                entries={user.entries}
-              />
-              <ImageLinkForm
-                onInputChange={onInputChange}
-                onButtonSubmit={onButtonSubmit}
-              />
-              <FaceRecognition box={box} imageUrl={imageUrl} />
-            </div>) 
-          : route === 'signin' ? (<Signin loadUser={loadUser} onRouteChange={onRouteChange}/>)
-             : (<Register loadUser={loadUser} onRouteChange={onRouteChange}/>)}
-      </div>
-    );
-  };
+  return (
+    <div className='App'>
+      <Particles className='particles' params={particlesOptions} />
+      <Navigation isSignedIn={isSignedIn} onRouteChange={onRouteChange} />
+      {route === 'home' ? (
+        <div>
+          <Logo />
+          <Rank name={user.name} entries={user.entries} />
+          <ImageLinkForm
+            onInputChange={onInputChange}
+            onPictureSubmit={onPictureSubmit}
+          />
+          <FaceRecognition box={box} imageUrl={imageUrl} />{' '}
+        </div>
+      ) : route === 'signin' ? (
+        <Signin loadUser={loadUser} onRouteChange={onRouteChange} />
+      ) : (
+        <Register loadUser={loadUser} onRouteChange={onRouteChange} />
+      )}
+    </div>
+  );
+};
 
 export default App;
